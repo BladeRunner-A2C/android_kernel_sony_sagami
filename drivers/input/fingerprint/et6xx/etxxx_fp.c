@@ -73,7 +73,7 @@ struct regulator *buck;
 #define EDGE_TRIGGER_RISING    0x1
 #define LEVEL_TRIGGER_LOW       0x2
 #define LEVEL_TRIGGER_HIGH      0x3
-#define WAKE_HOLD_TIME    2000//ms
+#define WAKE_HOLD_TIME    400//ms
 int egistec_platformInit(struct egistec_data *egistec);
 int egistec_platformFree(struct egistec_data *egistec);
 struct ioctl_cmd {
