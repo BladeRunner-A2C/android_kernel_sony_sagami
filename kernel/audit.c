@@ -113,7 +113,7 @@ static DEFINE_SPINLOCK(auditd_conn_lock);
 /* If audit_rate_limit is non-zero, limit the rate of sending audit records
  * to that number per second.  This prevents DoS attacks, but results in
  * audit records being dropped. */
-static u32	audit_rate_limit;
+static const u8 audit_rate_limit;
 
 /* Number of outstanding audit_buffers allowed.
  * When set to zero, this means unlimited. */
@@ -420,11 +420,6 @@ static int audit_do_config_change(char *function_name, u32 *to_change, u32 new)
 	else if (rc == 0)
 		rc = -EPERM;
 	return rc;
-}
-
-static int audit_set_rate_limit(u32 limit)
-{
-	return audit_do_config_change("audit_rate_limit", &audit_rate_limit, limit);
 }
 
 static int audit_set_backlog_limit(u32 limit)
@@ -1325,9 +1320,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
 			}
 		}
 		if (s.mask & AUDIT_STATUS_RATE_LIMIT) {
-			err = audit_set_rate_limit(s.rate_limit);
-			if (err < 0)
-				return err;
+			return 0;
 		}
 		if (s.mask & AUDIT_STATUS_BACKLOG_LIMIT) {
 			err = audit_set_backlog_limit(s.backlog_limit);
