@@ -707,7 +707,7 @@ def gen_blueprints(
 
 def parse_bp_for_headers(file_name, headers):
   parsing_headers = False
-  pattern = re.compile("gen_headers_out_[a-zA-Z0-9]+\s*=\s*\[\s*")
+  pattern = re.compile(r"gen_headers_out_[a-zA-Z0-9]+\s*=\s*\[\s*")
   with open(file_name, 'r') as f:
     for line in f:
       line = line.strip()
