@@ -914,4 +914,24 @@ config INPUT_STPMIC1_ONKEY
 	  To compile this driver as a module, choose M here: the
 	  module will be called stpmic1_onkey.
 
+config INPUT_BU520X1NVX
+	tristate "BU520X1NVX driver support"
+	help
+	  Say Y here if you want to support BU520X1NVX
+	  as bipolar detection device.
+
+config HALL_SENSOR_NOT_USE_SWITCH
+	tristate "switch class support"
+	depends on INPUT_BU520X1NVX
+	default y
+	help
+	Say N here if you can use switch_class.
+
+config HALL_SENSOR_NOT_USE_SETUP_TIMER
+	tristate "setup_timer macor support"
+	depends on INPUT_BU520X1NVX
+	default y
+	help
+	Say N here if you can use setup_timer.
+
 endif
