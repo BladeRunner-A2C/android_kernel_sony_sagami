@@ -1,0 +1,2 @@
+cirrus_cs40l2x_codec-objs = cs40l2x.o
+obj-y += cirrus_cs40l2x_codec.o
