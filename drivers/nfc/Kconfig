@@ -64,6 +64,7 @@ endmenu
 config NFC_QTI_I2C
 	tristate "QTI NCI based NFC I2C Slave Driver for SNxxx"
 	depends on I2C
+	default n
 	help
 	  This enables the NFC driver for SNxxx based devices.
 	  This is for I2C connected version. NCI protocol logic
@@ -87,3 +88,5 @@ config NFC_QTI_I3C
 	  This enables the NFC driver for SNxxx based devices.
 	  This is for I3C connected version. NCI protocol logic
 	  resides in the usermode and it has no other NFC dependencies.
+
+source "drivers/nfc/sn1x0_i2c/Kconfig"
