@@ -222,6 +222,11 @@ camera-$(CONFIG_SPECTRA_TFE) += \
 
 camera-y += camera_main.o
 
+obj-$(CONFIG_SPECTRA_CAMERA) += \
+        sony/slg51000_regulator.o \
+        sony/sony_camera.o \
+        sony/sony_camera_sync.o
+
 obj-$(CONFIG_SPECTRA_CAMERA) += camera.o
 
 ifeq ($(CONFIG_SPECTRA_CAMERA),m)
