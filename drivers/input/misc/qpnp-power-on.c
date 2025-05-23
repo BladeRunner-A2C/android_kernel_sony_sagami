@@ -172,6 +172,12 @@ enum qpnp_pon_version {
 #define PON_S2RESET_MASK \
 	(QPNP_PON_KPDPWR_N_SET | QPNP_PON_RESIN_N_SET)
 
+#define PON_S2RESET_MASK \
+	(QPNP_PON_KPDPWR_N_SET | QPNP_PON_RESIN_N_SET)
+
+#define PON_S2RESET_MASK \
+	(QPNP_PON_KPDPWR_N_SET | QPNP_PON_RESIN_N_SET)
+
 enum pon_type {
 	PON_KPDPWR	 = PON_POWER_ON_TYPE_KPDPWR,
 	PON_RESIN	 = PON_POWER_ON_TYPE_RESIN,
@@ -1087,6 +1093,20 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 			cancel_delayed_work_sync(&pon->resin_status_work);
 	}
 
+	if ((cfg->pon_type == PON_RESIN) || (cfg->pon_type == PON_KPDPWR)) {
+		if ((pon_rt_sts & PON_S2RESET_MASK) == PON_S2RESET_MASK)
+			schedule_delayed_work(&pon->resin_status_work, QPNP_RESIN_STATUS_DELAY);
+		else
+			cancel_delayed_work_sync(&pon->resin_status_work);
+	}
+
+	if ((cfg->pon_type == PON_RESIN) || (cfg->pon_type == PON_KPDPWR)) {
+		if ((pon_rt_sts & PON_S2RESET_MASK) == PON_S2RESET_MASK)
+			schedule_delayed_work(&pon->resin_status_work, QPNP_RESIN_STATUS_DELAY);
+		else
+			cancel_delayed_work_sync(&pon->resin_status_work);
+	}
+
 	if (pon->kpdpwr_dbc_enable && cfg->pon_type == PON_KPDPWR) {
 		if (!key_status)
 			pon->kpdpwr_last_release_time = ktime_get();
@@ -1117,6 +1137,8 @@ static irqreturn_t qpnp_kpdpwr_irq(int irq, void *_pon)
 {
 	int rc;
 	struct qpnp_pon *pon = _pon;
+
+	dev_err(pon->dev, "Receive POWER_KEY input event\n");
 
 	rc = qpnp_pon_input_dispatch(pon, PON_KPDPWR);
 	if (rc)
