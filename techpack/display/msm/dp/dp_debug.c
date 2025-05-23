@@ -1274,6 +1274,34 @@ static ssize_t dp_debug_read_info(struct file *file, char __user *user_buff,
 	if (dp_debug_check_buffer_overflow(rc, &max_size, &len))
 		goto error;
 
+#ifdef CONFIG_DRM_SDE_SPECIFIC_PANEL
+	rc = snprintf(buf + len, max_size,
+		"\tvid=%04x pid=%04x svid=%04x\n",
+		debug->hpd->vid, debug->hpd->pid, debug->hpd->svid);
+	if (dp_debug_check_buffer_overflow(rc, &max_size, &len))
+		goto error;
+
+	rc = snprintf(buf + len, max_size,
+		"\tdfp_type=%02x(%s) det_dfp_type=%02x(%s)\n",
+		      debug->panel->dfp_type,
+		      (debug->panel->dfp_type == DP_DWN_STRM_PORT_TYPE_DP)? "DP"
+		      : (debug->panel->dfp_type == DP_DWN_STRM_PORT_TYPE_TMDS)?
+		      "TMDS" : "NoInfo/Others",
+		      debug->panel->det_dfp_type,
+		      (debug->panel->det_dfp_type == DP_DS_PORT_TYPE_DP)? "DP"
+		      : (debug->panel->det_dfp_type == DP_DS_PORT_TYPE_HDMI)?
+					"HDMI" : "Other");
+	if (dp_debug_check_buffer_overflow(rc, &max_size, &len))
+		goto error;
+	rc = snprintf(buf + len, max_size,
+		      "\tmax_tmds=%02x, bpc=%02X, supp=%02X\n",
+		      debug->panel->det_dfp_max_tmds,
+		      debug->panel->det_dfp_max_bpc,
+		      debug->panel->det_dfp_supp);
+	if (dp_debug_check_buffer_overflow(rc, &max_size, &len))
+		goto error;
+
+#endif /* CONFIG_DRM_SDE_SPECIFIC_PANEL */
 	len = min_t(size_t, count, len);
 	if (copy_to_user(user_buff, buf, len))
 		goto error;
@@ -2103,7 +2131,7 @@ static int dp_debug_init_status(struct dp_debug_private *debug,
 		return rc;
 	}
 
-	file = debugfs_create_file("hdr", 0400, dir, debug, &hdr_fops);
+	file = debugfs_create_file("hdr", 0444, dir, debug, &hdr_fops);
 	if (IS_ERR_OR_NULL(file)) {
 		rc = PTR_ERR(file);
 		DP_ERR("[%s] debugfs hdr failed, rc=%d\n",
@@ -2111,7 +2139,7 @@ static int dp_debug_init_status(struct dp_debug_private *debug,
 		return rc;
 	}
 
-	file = debugfs_create_file("hdr_mst", 0400, dir, debug, &hdr_mst_fops);
+	file = debugfs_create_file("hdr_mst", 0444, dir, debug, &hdr_mst_fops);
 	if (IS_ERR_OR_NULL(file)) {
 		rc = PTR_ERR(file);
 		DP_ERR("[%s] debugfs hdr_mst failed, rc=%d\n",
