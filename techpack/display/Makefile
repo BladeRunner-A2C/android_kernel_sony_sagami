@@ -71,3 +71,9 @@ LINUXINCLUDE    += -include $(srctree)/techpack/display/config/sdxlemurdispconf.
 endif
 
 obj-$(CONFIG_DRM_QPIC_DISPLAY) += tinydrm/
+
+ifeq ($(CONFIG_ARCH_SONY_SAGAMI), y)
+include $(srctree)/techpack/display/config/sagamidisp.conf
+
+LINUXINCLUDE    += -include $(srctree)/techpack/display/config/sagamidispconf.h
+endif
